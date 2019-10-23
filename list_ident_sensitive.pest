@@ -1,0 +1,15 @@
+WHITESPACE = _{ " " }
+alpha = _{ 'a'..'z' | 'A'..'Z' }
+word = ${ alpha+ }
+item = _{ word+ }
+
+lists = {lines ~ EOI }
+lines = _{ line ~ (next_line)* }
+line = { "-" ~ item ~ (children)? }
+next_line = _{ identation ~ line }
+
+identation = ${ "\n" ~ PEEK_ALL }
+identation_push = ${ identation ~ PUSH(space) }
+
+space = _{ (" " | "\t")+ }
+children = { identation_push ~ lines ~ DROP }
